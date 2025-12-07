@@ -1,0 +1,14 @@
+.themeToggleContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .themeToggleContainer {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+}

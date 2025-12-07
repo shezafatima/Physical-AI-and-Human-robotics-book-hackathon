@@ -1,0 +1,416 @@
+.simulationContainer {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  position: relative;
+  overflow: hidden;
+}
+
+.simulationHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.simulationHeader h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ifm-color-primary);
+  font-size: 1.5rem;
+}
+
+.simulationHeader p {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1rem;
+}
+
+.simulationScene {
+  margin-bottom: 1.5rem;
+}
+
+.simulationArea {
+  height: 400px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  margin-bottom: 1rem;
+}
+
+.environment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.obstacle {
+  position: absolute;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.6; }
+}
+
+.target {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #00b894 0%, #00a085 100%);
+  box-shadow: 0 0 20px rgba(0, 184, 148, 0.4);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(0, 184, 148, 0.4); }
+  to { box-shadow: 0 0 30px rgba(0, 184, 148, 0.8); }
+}
+
+.targetInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40%;
+  height: 40%;
+  background: white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.robot {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.robot:hover {
+  transform: scale(1.2) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.robot.selectedRobot {
+  z-index: 20;
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 0 30px currentColor;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%) scale(1.2) translateY(0px); }
+  50% { transform: translate(-50%, -50%) scale(1.2) translateY(-10px); }
+}
+
+.robotInfo {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  padding: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  z-index: 30;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.robot:hover .robotInfo {
+  opacity: 1;
+  visibility: visible;
+}
+
+.robotInfo h4 {
+  margin: 0 0 0.25rem 0;
+  color: var(--ifm-color-primary);
+  font-size: 1rem;
+}
+
+.robotInfo p {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.robotStats {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.robotStats div {
+  margin-bottom: 0.25rem;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.particle.sensor {
+  background: #00b894;
+}
+
+.particle.data {
+  background: #0984e3;
+}
+
+.simulationTimeline {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.timelineBar {
+  width: 100%;
+  height: 8px;
+  background: var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.timelineProgress {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.timelineInfo {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 500;
+}
+
+.simulationControls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.controlButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playButton {
+  background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+  color: white;
+}
+
+.pauseButton {
+  background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+  color: white;
+}
+
+.resetButton {
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+}
+
+.controlButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.speedControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--ifm-color-emphasis-100);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.speedSelect {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+}
+
+.robotDetails {
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  padding: 1.5rem;
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.robotDetails h4 {
+  margin: 0 0 1rem 0;
+  color: var(--ifm-color-primary);
+  font-size: 1.3rem;
+}
+
+.robotDetails p {
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  color: var(--ifm-font-color-base);
+}
+
+.robotSpecs {
+  margin-top: 1rem;
+}
+
+.spec {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.spec:last-child {
+  border-bottom: none;
+}
+
+.spec strong {
+  color: var(--ifm-color-primary);
+  margin-right: 0.5rem;
+}
+
+/* Specific robot types */
+.humanoid {
+  border-radius: 30% 30% 20% 20%;
+}
+
+.wheeled {
+  border-radius: 50% 50% 10% 10%;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .simulationContainer {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+
+  .simulationArea {
+    height: 300px;
+  }
+
+  .robot {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
+
+  .robotInfo {
+    top: -100px;
+    min-width: 150px;
+  }
+
+  .simulationControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controlButton {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .speedControl {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .simulationArea {
+    height: 250px;
+  }
+
+  .robotInfo h4 {
+    font-size: 0.9rem;
+  }
+
+  .robotInfo p {
+    font-size: 0.7rem;
+  }
+}
+
+/* Dark mode enhancements */
+[data-theme="dark"] .simulationArea {
+  background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+}
+
+[data-theme="dark"] .robot {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .robotInfo {
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+[data-theme="dark"] .robotInfo h4 {
+  color: var(--ifm-color-primary-light);
+}
+
+[data-theme="dark"] .robotStats {
+  color: var(--ifm-color-emphasis-700);
+}
+
+[data-theme="dark"] .robotDetails {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-font-color-base);
+}
+
+[data-theme="dark"] .robotDetails h4 {
+  color: var(--ifm-color-primary-light);
+}
+
+[data-theme="dark"] .spec {
+  border-bottom-color: var(--ifm-color-emphasis-400);
+  color: var(--ifm-font-color-base);
+}
+
+[data-theme="dark"] .spec strong {
+  color: var(--ifm-color-primary-light);
+}

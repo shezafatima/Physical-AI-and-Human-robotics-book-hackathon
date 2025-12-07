@@ -1,0 +1,358 @@
+.interactiveContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.header h2 {
+  margin: 0;
+  color: var(--ifm-color-primary);
+  font-size: 1.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-background-surface-color);
+  color: var(--ifm-font-color-base);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.actionButton:hover {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-primary);
+}
+
+.actionButton.bookmarked {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-color: #f59e0b;
+}
+
+.actionButton.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--ifm-color-emphasis-300);
+  margin-bottom: 1.5rem;
+}
+
+.tabButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ifm-color-emphasis-700);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+  color: var(--ifm-color-primary);
+}
+
+.tabButton.activeTab {
+  color: var(--ifm-color-primary);
+  border-bottom-color: var(--ifm-color-primary);
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.tabContent {
+  min-height: 300px;
+}
+
+.contentTab {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contentText p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ifm-font-color-base);
+}
+
+.keyPoints {
+  background: var(--ifm-color-emphasis-100);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.keyPoints h4 {
+  margin-top: 0;
+  color: var(--ifm-color-primary);
+  font-size: 1.2rem;
+}
+
+.keyPoints ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.keyPoints li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.codeSection {
+  margin-top: 1.5rem;
+}
+
+.codeSection h4 {
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.codeBlock {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.codeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--ifm-color-emphasis-200);
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.fileName {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.copyButton {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-400);
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.copyButton:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.code {
+  margin: 0;
+  padding: 1rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+
+.examplesTab, .exercisesTab {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.examplesTab h3, .exercisesTab h3 {
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+}
+
+.exampleItem, .exerciseItem {
+  padding: 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 12px;
+  background: var(--ifm-color-emphasis-50);
+}
+
+.exampleItem h4, .exerciseItem h4 {
+  color: var(--ifm-color-primary);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.simulationContainer {
+  margin-top: 1rem;
+}
+
+.simulationPlaceholder {
+  padding: 1rem;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--ifm-color-emphasis-700);
+  font-style: italic;
+}
+
+.exampleCode {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.difficulty {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.difficultyLevel {
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-200);
+}
+
+.exerciseActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.notesSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.notesSection h4 {
+  color: var(--ifm-color-primary);
+  margin-bottom: 1rem;
+}
+
+.notesInput {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  background: var(--ifm-color-emphasis-100);
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.notesInput:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.notesActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.progressSection {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+}
+
+.progressBar {
+  width: 100%;
+  height: 12px;
+  background: var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  font-weight: 500;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .interactiveContainer {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header h2 {
+    font-size: 1.5rem;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .tabButton {
+    white-space: nowrap;
+  }
+
+  .exampleActions, .exerciseActions {
+    flex-direction: column;
+  }
+
+  .notesActions {
+    flex-direction: column;
+  }
+
+  .actionButton {
+    flex: 1;
+    justify-content: center;
+  }
+}

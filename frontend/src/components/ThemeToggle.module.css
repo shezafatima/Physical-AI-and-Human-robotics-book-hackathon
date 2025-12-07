@@ -1,0 +1,67 @@
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 20px;
+  background: var(--ifm-color-emphasis-100);
+  transition: background-color 0.3s ease;
+}
+
+.themeButton {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-font-color-base);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.themeButton:hover {
+  background: var(--ifm-color-emphasis-300);
+  transform: scale(1.1);
+}
+
+.themeLabel {
+  font-size: 0.9rem;
+  color: var(--ifm-font-color-base);
+  font-weight: 500;
+}
+
+/* Dark theme specific styles */
+[data-theme="dark"] .themeToggle {
+  background: var(--ifm-color-emphasis-200);
+}
+
+[data-theme="dark"] .themeButton {
+  background: var(--ifm-color-emphasis-300);
+}
+
+[data-theme="dark"] .themeButton:hover {
+  background: var(--ifm-color-emphasis-400);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .themeToggle {
+    gap: 0.25rem;
+    padding: 0.25rem;
+  }
+
+  .themeButton {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .themeLabel {
+    font-size: 0.8rem;
+    display: none; /* Hide label on small screens */
+  }
+}
