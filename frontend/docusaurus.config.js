@@ -12,11 +12,13 @@ const config = {
   tagline: 'An AI-Native Interactive Coursebook with RAG Chatbot',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here
-  url: 'https://your-coursebook.github.io',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub Pages: https://<USERNAME>.github.io/<REPO>/
-  baseUrl: '/',
+
+  // ...
+  url: 'https://shezafatima.github.io',  // your GitHub Pages URL
+  baseUrl: '/Physical-AI-and-Human-robotics-book-hackathon/',
+
+
+ 
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.

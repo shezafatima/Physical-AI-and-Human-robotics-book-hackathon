@@ -1,55 +1,61 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version change: 1.0.0 → 1.0.1
+Modified principles: None
+Added sections: Success Criteria
+Removed sections: None
+Templates requiring updates:
+  - .specify/templates/plan-template.md: ⚠ pending
+  - .specify/templates/spec-template.md: ⚠ pending
+  - .specify/templates/tasks-template.md: ⚠ pending
+  - .specify/templates/commands/*.md: ⚠ pending
+Follow-up TODOs: TODO(RATIFICATION_DATE): Needs to be set upon official adoption.
+-->
+# AI-Native Interactive Coursebook + RAG Chatbot for “Physical AI & Humanoid Robotics” Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### End-to-end Generative Workflow
+Utilize Spec-Kit Plus and Claude Code for a fully generative development workflow, ensuring consistency and automation.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Course Outline Accuracy
+Maintain strict accuracy and consistency with the official course outline to ensure educational integrity.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Modular Chapter Architecture
+Design chapters with a modular architecture to facilitate easy regeneration, updates, and maintenance.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Clear Technical Explanations
+Provide clear, concise, and accurate technical explanations suitable for engineering students.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### RAG Chatbot Context Adherence
+The RAG chatbot MUST answer strictly from the provided book context, preventing hallucinations.
 
-### [PRINCIPLE_6_NAME]
+## Key Standards
 
+*   Book Content Generation: Entirely from spec files (one spec per chapter/module).
+*   Code Example Validation: All code examples must be validated and executable.
+*   Vector Embeddings Consistency: Vector embeddings must be generated consistently across chapters.
+*   API Communication: Follow OpenAI Agents + ChatKit SDK best practices.
+*   Website Structure: Docusaurus structure must remain clean, readable, and SEO-friendly.
 
-[PRINCIPLE__DESCRIPTION]
+## Project Constraints
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+*   Minimum Chapters: 8 full chapters matching weekly course modules.
+*   Chapter Content: Each chapter must include: overview, learning objectives, diagrams, code samples, exercises.
+*   Chatbot Technologies: FastAPI, Neon Postgres, Qdrant Vector DB.
+*   Website Framework: Docusaurus.
+*   Website Deployment: Must be deployable to GitHub Pages or Vercel.
+*   MCP Server: Context7 must be connected for local context operations.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Success Criteria
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+*   Complete book deployed on Docusaurus and fully navigable.
+*   RAG chatbot embedded and able to answer using selected text only.
+*   All spec files validated by Spec-Kit Plus without errors.
+*   Backend successfully connected to Docusaurus UI.
+*   GitHub integration ready for final submission.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+Constitution supersedes all other practices; Amendments require documentation, approval, and a migration plan. All PRs/reviews must verify compliance.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.1 | **Ratified**: TODO(RATIFICATION_DATE): Needs to be set upon official adoption. | **Last Amended**: 2025-12-06

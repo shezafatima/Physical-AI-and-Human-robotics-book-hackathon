@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p frontend/src/components frontend/src/css frontend/docs)",
+      "Bash(tasklist)",
+      "Bash(findstr node)",
+      "Bash(taskkill /pid 5112 /f)",
+      "Bash(npm run start)",
+      "Bash(npm run build)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
