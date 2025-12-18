@@ -12,13 +12,9 @@ const config = {
   tagline: 'An AI-Native Interactive Coursebook with RAG Chatbot',
   favicon: 'img/favicon.ico',
 
-
   // ...
   url: 'https://shezafatima.github.io',  // your GitHub Pages URL
-  baseUrl: '/Physical-AI-and-Human-robotics-book-hackathon/',
-
-
- 
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -58,6 +54,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      colorMode: {
+        defaultMode: 'light',
+        disableSwitch: true,  // Disable the default color mode switch to avoid duplication
+        respectPrefersColorScheme: false,
+      },
       // Replace with your project's social card
       image: 'img/docusaurus-social-card.jpg',
       navbar: {

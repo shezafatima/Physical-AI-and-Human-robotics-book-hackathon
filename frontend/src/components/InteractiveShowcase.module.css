@@ -1,0 +1,73 @@
+.interactiveShowcase {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.interactiveShowcase h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--ifm-heading-color);
+  font-size: 2rem;
+}
+
+.interactiveShowcase p {
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--ifm-font-color-secondary);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.interactiveDiagram {
+  margin-bottom: 3rem;
+  padding: 1rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.interactive3d,
+.interactiveSimulation {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--ifm-background-surface-color);
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive design */
+@media (max-width: 996px) {
+  .interactiveShowcase {
+    padding: 3rem 0;
+  }
+
+  .interactiveShowcase h2 {
+    font-size: 1.75rem;
+  }
+
+  .interactive3d,
+  .interactiveSimulation {
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .interactiveShowcase {
+    padding: 2rem 0;
+  }
+
+  .interactiveShowcase h2 {
+    font-size: 1.5rem;
+  }
+
+  .interactiveShowcase p {
+    font-size: 1rem;
+  }
+
+  .col--6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

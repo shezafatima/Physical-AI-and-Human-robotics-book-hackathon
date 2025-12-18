@@ -1,14 +1,2 @@
-.themeToggleContainer {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1000;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .themeToggleContainer {
-    top: 0.5rem;
-    right: 0.5rem;
-  }
-}
+/* Empty file - main layout doesn't need special styles since
+   DocItem pages use CourseLayout which has its own styling */

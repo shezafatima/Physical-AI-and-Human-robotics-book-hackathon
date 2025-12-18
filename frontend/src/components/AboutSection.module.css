@@ -1,0 +1,44 @@
+.aboutSection {
+  padding: 4rem 0;
+  background: var(--ifm-background-color);
+}
+
+.aboutSection h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--ifm-heading-color);
+  font-size: 2rem;
+}
+
+.aboutSection p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--ifm-font-color-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 996px) {
+  .aboutSection {
+    padding: 3rem 0;
+  }
+
+  .aboutSection h2 {
+    font-size: 1.75rem;
+  }
+
+  .aboutSection p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .aboutSection {
+    padding: 2rem 0;
+  }
+
+  .aboutSection h2 {
+    font-size: 1.5rem;
+  }
+}

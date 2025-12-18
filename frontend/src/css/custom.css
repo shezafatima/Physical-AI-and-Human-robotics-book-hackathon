@@ -22,6 +22,9 @@
   --ifm-color-secondary-lightest: #bba6d6;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* Page background variables */
+  --ifm-background-color: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --ifm-background-color-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -41,6 +44,8 @@
   --ifm-color-secondary-lighter: #859af0;
   --ifm-color-secondary-lightest: #a4b3f4;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* Override page background for dark mode */
+  --ifm-background-color: var(--ifm-background-color-dark);
 }
 
 /* Custom styles for links and navigation */
@@ -115,4 +120,116 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   --ifm-footer-color: #fff;
   --ifm-footer-link-color: #bdc3c7;
   --ifm-footer-title-color: #ecf0f1;
+}
+.navbar {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  background: transparent !important;
+}
+
+/* 2. Remove white background behind main content */
+/* .main-wrapper {
+  background: transparent !important;
+} */
+
+/* 3. Prevent hero from looking boxed */
+main {
+  padding-top: 0 !important;
+}
+
+/* 4. Ensure hero text NEVER turns black */
+.heroBanner,
+.heroBanner * {
+  color: #ffffff !important;
+}
+
+/* 5. Fix strange top glow line */
+.navbar::after {
+  display: none !important;
+}
+
+/* 6. Apply full viewport background to root level */
+html {
+  background: var(--ifm-background-color);
+  min-height: 100%;
+}
+
+body {
+  background: transparent;
+  min-height: 100vh;
+}
+
+/* Remove any remaining boxed layouts from content */
+.doc-page,
+.docs-wrapper,
+.container,
+.theme-doc-markdown,
+.markdown {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Ensure sidebar and content area have proper spacing */
+.sidebar {
+  background: var(--ifm-background-surface-color);
+}
+
+/* Ensure content area has proper background */
+.main-wrapper {
+  background: transparent;
+}
+
+/* Adjust content padding for better alignment */
+.content {
+  padding: 0 !important;
+}
+
+/* Remove any default card-like styling from content containers */
+article,
+.markdown > div,
+.theme-doc-markdown > div {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Footer styling */
+.footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 2rem 0 1rem 0 !important;
+  margin-top: 3rem !important;
+}
+
+.footer h4 {
+  color: white !important;
+  opacity: 0.9 !important;
+}
+
+.footer a {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.footer a:hover {
+  color: white !important;
+}
+
+.footer__item {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.footer__item:hover {
+  color: white !important;
+}
+
+/* Ensure footer has proper spacing */
+main > .container:last-child {
+  padding-bottom: 0 !important;
+}
+
+/* Footer bottom section */
+.footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding-top: 1rem !important;
+  margin-top: 1.5rem !important;
 }

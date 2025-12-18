@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import styles from './Chatbot.module.css';
 import { chatWithBot } from '../services/api';
 
-const Chatbot = ({ className }) => {
+const Chatbot = ({ className, onClose }) => {
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -74,9 +74,18 @@ const Chatbot = ({ className }) => {
           <span className={styles.botIcon}>🤖</span>
           <h3>Course Assistant</h3>
         </div>
-        <div className={styles.chatStatus}>
-          <span className={styles.statusIndicator}></span>
-          <span className={styles.statusText}>Online</span>
+        <div className={styles.chatControls}>
+          <button
+            className={styles.closeButton}
+            onClick={() => onClose && onClose()}
+            aria-label="Close chatbot"
+          >
+            ×
+          </button>
+          <div className={styles.chatStatus}>
+            <span className={styles.statusIndicator}></span>
+            <span className={styles.statusText}>Online</span>
+          </div>
         </div>
       </div>
 
