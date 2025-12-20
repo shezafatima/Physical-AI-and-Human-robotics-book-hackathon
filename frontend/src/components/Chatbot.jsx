@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import styles from './Chatbot.module.css';
 import { chatWithBot } from '../services/api';
+import { marked } from 'marked';
 
-const Chatbot = ({ className, onClose }) => {
+const Chatbot = ({ className, onClose, initialOpen = true }) => {
+  const [isVisible, setIsVisible] = useState(initialOpen);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -24,7 +26,7 @@ const Chatbot = ({ className, onClose }) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e, selectedText = null) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading) return;
 
@@ -33,7 +35,8 @@ const Chatbot = ({ className, onClose }) => {
       id: Date.now(),
       text: inputValue,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date(),
+      selectedText: selectedText || null
     };
 
     setMessages(prev => [...prev, userMessage]);
@@ -41,13 +44,30 @@ const Chatbot = ({ className, onClose }) => {
     setIsLoading(true);
 
     try {
-      // Call the actual API service
-      const response = await chatWithBot(inputValue);
+      // Call the actual API service with selected text support
+      const contextMode = selectedText ? 'selected_text' : 'full_content';
+      const response = await chatWithBot(inputValue, selectedText, contextMode);
+
+      // Handle error responses from the API
+      if (response.status === 'error' || response.error) {
+        const errorMessage = {
+          id: Date.now() + 1,
+          text: response.response || "Sorry, I encountered an error processing your request. Please try again.",
+          sender: 'bot',
+          timestamp: new Date(),
+          error: true
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        setIsLoading(false);
+        return;
+      }
+
       const botResponse = {
         id: Date.now() + 1,
         text: response.response,
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        sources: response.sources || []
       };
       setMessages(prev => [...prev, botResponse]);
       setIsLoading(false);
@@ -56,7 +76,8 @@ const Chatbot = ({ className, onClose }) => {
         id: Date.now() + 1,
         text: "Sorry, I encountered an error processing your request. Please try again.",
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        error: true
       };
       setMessages(prev => [...prev, errorMessage]);
       setIsLoading(false);
@@ -66,6 +87,38 @@ const Chatbot = ({ className, onClose }) => {
   const formatTime = (date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+    // If closing and parent provided onClose, call it
+    if (isVisible && onClose) {
+      onClose();
+    }
+  };
+
+  if (!isVisible) {
+    // Render just the toggle button when closed
+    return (
+      <button
+        className={clsx(styles.chatbotToggle, className)}
+        onClick={toggleVisibility}
+        aria-label="Open chatbot"
+        style={{
+          background: '#2563eb',
+          color: 'white',
+          border: 'none',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          fontSize: '24px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+        }}
+      >
+        💬
+      </button>
+    );
+  }
 
   return (
     <div className={clsx(styles.chatbotContainer, className)}>
@@ -77,7 +130,7 @@ const Chatbot = ({ className, onClose }) => {
         <div className={styles.chatControls}>
           <button
             className={styles.closeButton}
-            onClick={() => onClose && onClose()}
+            onClick={toggleVisibility}
             aria-label="Close chatbot"
           >
             ×
@@ -100,7 +153,29 @@ const Chatbot = ({ className, onClose }) => {
             )}
           >
             <div className={styles.messageContent}>
-              <div className={styles.messageText}>{message.text}</div>
+              <div className={clsx(
+                styles.messageText,
+                message.error ? styles.errorMessage : ''
+              )}>
+                {message.sender === 'bot' ? (
+                  <div dangerouslySetInnerHTML={{ __html: marked(message.text || '') }} />
+                ) : (
+                  message.text
+                )}
+              </div>
+              {message.sender === 'bot' && !message.error && message.sources && message.sources.length > 0 && (
+                <div className={styles.messageSources}>
+                  <strong>Sources:</strong>
+                  <ul>
+                    {message.sources.slice(0, 3).map((source, idx) => (
+                      <li key={idx}>{source}</li>
+                    ))}
+                    {message.sources.length > 3 && (
+                      <li>... and {message.sources.length - 3} more</li>
+                    )}
+                  </ul>
+                </div>
+              )}
               <div className={styles.messageTime}>{formatTime(message.timestamp)}</div>
             </div>
           </div>

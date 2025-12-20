@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './HeroSection.module.css';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const HeroSection = () => {
   const {siteConfig} = useDocusaurusContext();
@@ -33,7 +34,7 @@ const HeroSection = () => {
           </div>
           <div className={styles.heroImage}>
             <img
-              src="/img/hero.png"
+                src={useBaseUrl('/img/hero.png')}
               alt="Physical AI & Humanoid Robotics"
               className={styles.heroImg}
             />

@@ -98,14 +98,22 @@ The backend provides the following endpoints:
 
 - `GET /` - Welcome message
 - `GET /health` - Health check
-- `POST /chat` - Chat with the RAG bot (to be implemented)
-- `GET /courses/{courseId}` - Get course content (to be implemented)
-- `GET /chapters/{chapterId}` - Get chapter content (to be implemented)
-- `POST /quizzes/{quizId}/submit` - Submit quiz answers (to be implemented)
-- `POST /notes` - Save user notes (to be implemented)
-- `GET /notes` - Get user notes (to be implemented)
-- `POST /progress` - Update progress (to be implemented)
-- `GET /progress` - Get progress (to be implemented)
+- `POST /chat` - Chat with the RAG bot
+- `POST /retrieve` - Retrieve relevant content chunks for a query using semantic search
+- `POST /validate` - Validate retrieval pipeline with test queries
+- `POST /load-course-content` - Load course content from markdown files into vector database
+- `POST /load-sitemap-content` - Load content from sitemap URL into vector database
+- `GET /courses/{courseId}` - Get course content
+- `GET /chapters/{chapterId}` - Get chapter content
+- `POST /quizzes/{quizId}/submit` - Submit quiz answers
+- `POST /notes` - Save user notes
+- `GET /notes` - Get user notes
+- `POST /progress` - Update progress
+- `GET /progress` - Get progress
+- `POST /plagiarism-check` - Check content for plagiarism
+- `GET /content-ingestion/status` - Check content ingestion service status
+- `POST /content-ingestion/process-site` - Process content from GitHub Pages site
+- `POST /content-ingestion/test-connection` - Test connection to Cohere and Qdrant services
 
 ## Environment Variables
 
@@ -137,6 +145,49 @@ To run both servers simultaneously:
    ```bash
    cd frontend && npm run start
    ```
+
+## Retrieval and Validation Usage
+
+The system includes advanced retrieval and validation capabilities:
+
+### Content Retrieval
+To retrieve relevant content chunks for a query, send a POST request to `/retrieve`:
+
+```bash
+curl -X POST http://localhost:8000/retrieve \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "What are the principles of humanoid robotics?",
+    "top_k": 5,
+    "score_threshold": 0.1
+  }'
+```
+
+### Pipeline Validation
+To validate the retrieval pipeline, send a POST request to `/validate`:
+
+```bash
+curl -X POST http://localhost:8000/validate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": {
+      "query": "What is machine learning?",
+      "top_k": 3
+    },
+    "test_type": "automated",
+    "validation_criteria": {
+      "min_relevance_score": 0.5,
+      "max_response_time_ms": 2000
+    }
+  }'
+```
+
+### Loading Course Content
+Before using the retrieval system, load course content:
+
+```bash
+curl -X POST http://localhost:8000/load-course-content
+```
 
 ## Development
 

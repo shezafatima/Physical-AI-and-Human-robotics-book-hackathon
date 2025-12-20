@@ -14,7 +14,7 @@ const config = {
 
   // ...
   url: 'https://shezafatima.github.io',  // your GitHub Pages URL
-  baseUrl: '/',
+  baseUrl: '/Physical-AI-and-Human-robotics-book-hackathon/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.

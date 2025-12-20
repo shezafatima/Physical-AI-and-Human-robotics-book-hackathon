@@ -8,29 +8,89 @@ class ApiService {
     this.baseURL = API_BASE_URL;
   }
 
-  // Generic request method
+  // Generic request method with timeout and retry logic
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    };
 
-    try {
-      const response = await fetch(url, config);
+    // Set default timeout to 30 seconds if not specified
+    const timeout = options.timeout || 30000;
+    // Set default retry attempts to 3 if not specified
+    const maxRetries = options.maxRetries || 3;
+    // Set default retry delay to 1000ms if not specified
+    const retryDelay = options.retryDelay || 1000;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    let lastError;
+
+    // Try the request up to maxRetries times
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      // Create AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+        signal: controller.signal, // Add abort signal for timeout
+        ...options,
+      };
+
+      try {
+        const response = await fetch(url, config);
+        clearTimeout(timeoutId); // Clear timeout on successful response
+
+        // Handle different response status codes according to API contract
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+
+          // Create specific error messages based on status codes
+          switch (response.status) {
+            case 400:
+              throw new Error(`Bad Request: ${errorData.error || 'Invalid request format'}`);
+            case 408:
+              throw new Error(`Request Timeout: ${errorData.error || 'Request timed out'}`);
+            case 500:
+              throw new Error(`Server Error: ${errorData.error || 'Internal server error occurred'}`);
+            default:
+              throw new Error(`HTTP error! status: ${response.status} - ${errorData.error || response.statusText}`);
+          }
+        }
+
+        return await response.json();
+      } catch (error) {
+        clearTimeout(timeoutId); // Clear timeout on error too
+
+        // Check if the error is due to timeout
+        if (error.name === 'AbortError') {
+          lastError = new Error('Request Timeout: The request took too long to complete.');
+        }
+        // Handle network errors and other fetch-related errors
+        else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+          lastError = new Error('Network Error: Unable to connect to the server. Please check your connection.');
+        }
+        else if (error.message.includes('timeout') || error.message.includes('408')) {
+          lastError = new Error('Request Timeout: The request took too long to complete.');
+        }
+        else {
+          lastError = error;
+        }
+
+        console.error(`API request failed (attempt ${attempt + 1}/${maxRetries + 1}):`, lastError);
+
+        // If this was the last attempt, throw the error
+        if (attempt === maxRetries) {
+          throw lastError;
+        }
+
+        // Wait before retrying (exponential backoff)
+        const delay = retryDelay * Math.pow(2, attempt); // 1s, 2s, 4s, etc.
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
-
-      return await response.json();
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
     }
+
+    // This line should never be reached, but included for completeness
+    throw lastError;
   }
 
   // Health check
@@ -39,12 +99,14 @@ class ApiService {
   }
 
   // Chatbot API methods
-  async sendMessage(message, context = null) {
+  async sendMessage(message, selectedText = null, contextMode = 'full_content', sessionId = null) {
     return this.request('/chat', {
       method: 'POST',
       body: JSON.stringify({
         message,
-        context,
+        selected_text: selectedText,
+        context_mode: contextMode,
+        session_id: sessionId,
         timestamp: new Date().toISOString()
       })
     });
@@ -111,15 +173,19 @@ const apiService = new ApiService();
 export default apiService;
 
 // Example usage functions
-export const chatWithBot = async (message, context = null) => {
+export const chatWithBot = async (message, selectedText = null, contextMode = 'full_content', sessionId = null) => {
   try {
-    return await apiService.sendMessage(message, context);
+    return await apiService.sendMessage(message, selectedText, contextMode, sessionId);
   } catch (error) {
     console.error('Error chatting with bot:', error);
-    // Return a mock response for development
+
+    // Return a proper error response according to API contract
     return {
-      response: `I understand you're asking about: "${message}". This is a simulated response from the RAG Chatbot. In a full implementation, this would connect to your backend API to provide context-aware responses based on the course materials.`,
-      context: context || 'course-materials',
+      response: `Error: ${error.message}`,
+      sources: [],
+      confidence: 'insufficient_data',
+      status: 'error',
+      error: error.message,
       timestamp: new Date().toISOString()
     };
   }

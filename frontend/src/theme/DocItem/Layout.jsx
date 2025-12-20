@@ -15,7 +15,7 @@ export default function DocItemLayout(props) {
     <CourseLayout
       title={title}
       description={description}
-      showChatbot={true}
+      // showChatbot={true}
       isHomePage={false}
     >
       <OriginalDocItemLayout {...props} />

@@ -6,7 +6,14 @@
       "Bash(findstr node)",
       "Bash(taskkill /pid 5112 /f)",
       "Bash(npm run start)",
-      "Bash(npm run build)"
+      "Bash(npm run build)",
+      "Bash(npx docusaurus start --port 3012)",
+      "Bash(dir backend)",
+      "Bash(dir \"frontend/src\")",
+      "Bash(powershell -Command \".specify/scripts/powershell/check-prerequisites.ps1 -Json\")",
+      "Bash(python -c \"\nfrom src.config.settings import settings\nfrom src.services.rag_agent import RAGAgent\nfrom src.services.openai_chat_completions_model import OpenAIChatCompletionsModel\nfrom openai import AsyncOpenAI\nfrom dotenv import load_dotenv\nimport os\n\n# Load environment\nload_dotenv\\(\\)\n\nprint\\(''Testing the configuration setup...''\\)\n\n# Test the settings\nprint\\(f''GEMINI_API_KEY set: {bool\\(settings.GEMINI_API_KEY\\)}''\\)\nprint\\(f''OPENAI_API_KEY set: {bool\\(settings.OPENAI_API_KEY\\)}''\\)\nprint\\(f''BASE_URL: {settings.BASE_URL}''\\)\nprint\\(f''MODEL_NAME: {settings.MODEL_NAME}''\\)\n\n# Test creating the RAG agent\ntry:\n    rag_agent = RAGAgent\\(\\)\n    print\\(''RAG Agent created successfully''\\)\n    print\\(f''OpenAI client base URL: {rag_agent.openai_client.base_url}''\\)\n    print\\(f''Model name: {rag_agent.model.model}''\\)\nexcept Exception as e:\n    print\\(f''Error creating RAG agent: {e}''\\)\n\nprint\\(''Configuration test completed successfully!''\\)\n\")",
+      "Bash(if exist \"E:\\\\book-hackathon\\\\hackathon\\\\frontend\\\\src\\\\services\\\\api.js\" echo File exists)",
+      "Bash(pip install -r ./requirements.txt)"
     ],
     "deny": [],
     "ask": []

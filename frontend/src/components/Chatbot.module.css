@@ -139,6 +139,30 @@
   text-align: right;
 }
 
+.messageSources {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  font-size: 0.8rem;
+}
+
+.messageSources strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.messageSources ul {
+  margin: 0.25rem 0 0 1rem;
+  padding: 0;
+  list-style-type: disc;
+}
+
+.messageSources li {
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
 .typingIndicator {
   display: flex;
   gap: 4px;
