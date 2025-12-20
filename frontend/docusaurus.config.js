@@ -15,11 +15,12 @@ const config = {
   // ...
   url: 'https://shezafatima.github.io',  // your GitHub Pages URL
   baseUrl: '/Physical-AI-and-Human-robotics-book-hackathon/',
+  trailingSlash: false,  // Explicitly set trailing slash behavior
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'your-organization', // Usually your GitHub org/user name.
-  projectName: 'coursebook', // Usually your repo name.
+  organizationName: 'shezafatima', // Usually your GitHub org/user name.
+  projectName: 'Physical-AI-and-Human-robotics-book-hackathon', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
