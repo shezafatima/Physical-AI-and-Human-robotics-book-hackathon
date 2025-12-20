@@ -1,0 +1,274 @@
+openapi: 3.0.0
+info:
+  title: RAG Retrieval API
+  description: API for semantic retrieval in the RAG system
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /retrieve:
+    post:
+      summary: Retrieve relevant content chunks for a query
+      description: Converts the user query to embeddings and searches Qdrant for the most relevant content chunks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Successfully retrieved relevant content chunks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RetrievalResult'
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error during retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /validate:
+    post:
+      summary: Validate retrieval pipeline with test query
+      description: Runs a validation test on the retrieval pipeline and returns validation results
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidationTest'
+      responses:
+        '200':
+          description: Validation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+        '400':
+          description: Invalid validation test parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error during validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    QueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The natural language query to search for
+          example: "What are the key principles of humanoid robotics?"
+        top_k:
+          type: integer
+          description: Number of top results to retrieve (default: 5, min: 1, max: 100)
+          minimum: 1
+          maximum: 100
+          default: 5
+        score_threshold:
+          type: number
+          description: Minimum relevance score threshold (default: 0.0)
+          minimum: 0.0
+          maximum: 1.0
+          default: 0.0
+
+    RetrievalResult:
+      type: object
+      required:
+        - results
+        - query_embedding
+        - search_params
+        - response_time_ms
+        - total_results
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentChunk'
+          description: The retrieved content chunks
+        query_embedding:
+          $ref: '#/components/schemas/Embedding'
+          description: The embedding of the original query
+        search_params:
+          type: object
+          properties:
+            top_k:
+              type: integer
+              description: Number of results requested
+            score_threshold:
+              type: number
+              description: Score threshold used for filtering
+        response_time_ms:
+          type: integer
+          description: Time taken to process the query in milliseconds
+        total_results:
+          type: integer
+          description: Total number of results returned
+
+    ContentChunk:
+      type: object
+      required:
+        - id
+        - content
+        - metadata
+        - score
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the content chunk
+          example: "chunk_12345"
+        content:
+          type: string
+          description: The actual text content of the chunk
+          example: "Humanoid robotics is a field that focuses on creating robots with human-like characteristics..."
+        metadata:
+          type: object
+          properties:
+            source_url:
+              type: string
+              description: URL where the content originated
+              example: "https://example.com/book/chapter1"
+            title:
+              type: string
+              description: Title of the content section
+              example: "Introduction to Humanoid Robotics"
+            chapter:
+              type: string
+              description: Chapter or section identifier
+              example: "Chapter 1"
+            created_at:
+              type: string
+              format: date-time
+              description: Timestamp when the chunk was created
+              example: "2025-12-18T10:00:00Z"
+        score:
+          type: number
+          description: Relevance score for this chunk
+          minimum: 0.0
+          maximum: 1.0
+          example: 0.85
+
+    Embedding:
+      type: object
+      required:
+        - vector
+        - model
+        - input_type
+      properties:
+        vector:
+          type: array
+          items:
+            type: number
+          description: The embedding vector (1024 dimensions for Cohere)
+          example: [0.1, 0.2, 0.3, 0.4] # truncated for example
+        model:
+          type: string
+          description: The model used to generate the embedding
+          example: "embed-english-v3.0"
+        input_type:
+          type: string
+          description: The type of input used
+          enum: [search_query, search_document]
+          example: "search_query"
+
+    ValidationTest:
+      type: object
+      required:
+        - query
+        - test_type
+      properties:
+        query:
+          $ref: '#/components/schemas/QueryRequest'
+        expected_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentChunk'
+          description: Expected results for validation (optional)
+        test_type:
+          type: string
+          enum: [automated, manual]
+          description: Type of validation test
+          example: "automated"
+        validation_criteria:
+          type: object
+          properties:
+            min_relevance_score:
+              type: number
+              description: Minimum acceptable relevance score
+              minimum: 0.0
+              maximum: 1.0
+              default: 0.7
+            max_response_time_ms:
+              type: integer
+              description: Maximum acceptable response time in milliseconds
+              default: 2000
+
+    ValidationResult:
+      type: object
+      required:
+        - test_id
+        - passed
+        - details
+      properties:
+        test_id:
+          type: string
+          description: Unique identifier for the validation test
+        passed:
+          type: boolean
+          description: Whether the test passed validation
+        details:
+          type: object
+          description: Detailed results of the validation
+          properties:
+            actual_results:
+              $ref: '#/components/schemas/RetrievalResult'
+            validation_metrics:
+              type: object
+              properties:
+                avg_relevance_score:
+                  type: number
+                  description: Average relevance score of results
+                response_time_ms:
+                  type: integer
+                  description: Actual response time
+                semantic_relevance:
+                  type: string
+                  description: Manual assessment of semantic relevance
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "EMBEDDING_ERROR"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Failed to generate embeddings for the query"
+        details:
+          type: object
+          description: Additional error details (optional)

@@ -1,0 +1,218 @@
+openapi: 3.0.3
+info:
+  title: RAG Agent API
+  description: API for the Retrieval-Augmented Generation agent that processes user queries using book content
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /v1/query:
+    post:
+      summary: Submit a query to the RAG agent
+      description: Process a user query against book content and return a grounded response
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Successful response from the RAG agent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+        '400':
+          description: Bad request - invalid query format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - missing or invalid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/health:
+    get:
+      summary: Health check endpoint
+      description: Check the health status of the RAG agent service
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+components:
+  schemas:
+    QueryRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The user's query about book content
+          example: "What are the key principles of physical AI?"
+        user_id:
+          type: string
+          description: Optional identifier for the user
+          example: "user-12345"
+        metadata:
+          type: object
+          description: Additional metadata for the query
+          additionalProperties: true
+          example:
+            session_id: "session-abc"
+            source: "web"
+
+    QueryResponse:
+      type: object
+      required:
+        - id
+        - query
+        - response
+        - confidence_level
+        - sources
+        - timestamp
+      properties:
+        id:
+          type: string
+          description: Unique identifier for this response
+          example: "resp-abc123"
+        query:
+          type: string
+          description: The original query submitted
+          example: "What are the key principles of physical AI?"
+        response:
+          type: string
+          description: The generated response based on book content
+          example: "The key principles of physical AI include embodied cognition, sensorimotor learning, and adaptive control systems..."
+        confidence_level:
+          type: string
+          description: Confidence level of the response
+          enum: [high, medium, low, insufficient_data]
+          example: "high"
+        sources:
+          type: array
+          description: List of source chunks used to generate the response
+          items:
+            $ref: '#/components/schemas/SourceChunk'
+        timestamp:
+          type: string
+          format: date-time
+          description: When the response was generated
+          example: "2025-12-18T10:30:00Z"
+        metadata:
+          type: object
+          description: Additional metadata about the generation process
+          additionalProperties: true
+          example:
+            retrieval_time_ms: 250
+            generation_time_ms: 1200
+
+    SourceChunk:
+      type: object
+      required:
+        - chunk_id
+        - content
+        - source_document
+        - confidence_score
+      properties:
+        chunk_id:
+          type: string
+          description: Unique identifier for the source chunk
+          example: "chunk-xyz789"
+        content:
+          type: string
+          description: The actual content of the source chunk
+          example: "Physical AI is characterized by the integration of perception, action, and learning in embodied systems..."
+        source_document:
+          type: string
+          description: Reference to the source document
+          example: "physical_ai_chapter_3.pdf"
+        page_number:
+          type: integer
+          description: Page number in the source document (if applicable)
+          example: 45
+        section_title:
+          type: string
+          description: Title of the section containing the chunk
+          example: "Embodied Intelligence Principles"
+        confidence_score:
+          type: number
+          description: Confidence score for this chunk's relevance (0.0-1.0)
+          format: float
+          example: 0.87
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "QUERY_TOO_SHORT"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Query must be at least 5 characters long"
+        details:
+          type: object
+          description: Additional error details (optional)
+          additionalProperties: true
+
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          description: Current health status of the service
+          example: "healthy"
+        timestamp:
+          type: string
+          format: date-time
+          description: When the health check was performed
+          example: "2025-12-18T10:30:00Z"
+        details:
+          type: object
+          description: Additional health details (optional)
+          additionalProperties: true
+          example:
+            retrieval_service: "connected"
+            language_model: "connected"
+            response_time_ms: 15
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: API key authentication for the RAG agent service

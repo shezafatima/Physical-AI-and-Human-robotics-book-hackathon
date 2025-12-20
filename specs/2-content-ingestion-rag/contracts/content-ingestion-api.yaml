@@ -1,0 +1,44 @@
+# API Contract: Content Ingestion Service
+
+## Endpoints
+
+### GET /content-ingestion/status
+**Description**: Check the status of the content ingestion service
+**Response**:
+```json
+{
+  "status": "healthy",
+  "message": "Content ingestion service is running"
+}
+```
+
+### POST /content-ingestion/process-site
+**Description**: Process all content from a specified GitHub Pages site
+**Request**:
+```json
+{
+  "site_url": "https://shezafatima.github.io/Physical-AI-and-Human-robotics-book-hackathon/"
+}
+```
+
+**Response**:
+```json
+{
+  "status": "success",
+  "message": "Content ingestion completed",
+  "urls_processed": 15,
+  "chunks_created": 45,
+  "processing_time": "2.5 minutes"
+}
+```
+
+### POST /content-ingestion/test-connection
+**Description**: Test connection to Cohere and Qdrant services
+**Response**:
+```json
+{
+  "cohere_connected": true,
+  "qdrant_connected": true,
+  "message": "All services connected successfully"
+}
+```
