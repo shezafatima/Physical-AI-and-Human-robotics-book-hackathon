@@ -168,7 +168,9 @@ const Chatbot = ({ className, onClose, initialOpen = true }) => {
                   <strong>Sources:</strong>
                   <ul>
                     {message.sources.slice(0, 3).map((source, idx) => (
-                      <li key={idx}>{source}</li>
+                      <li key={typeof source === 'string' ? `${idx}-${source}` : source.chunk_id || idx}>
+                        {typeof source === 'string' ? source : source.section_title || source.source_document || source.content?.substring(0, 50) + '...'}
+                      </li>
                     ))}
                     {message.sources.length > 3 && (
                       <li>... and {message.sources.length - 3} more</li>
