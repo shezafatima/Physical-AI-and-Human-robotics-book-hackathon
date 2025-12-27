@@ -11,7 +11,7 @@ from src.api.schemas import (
     ErrorResponseSchema
 )
 from src.services.rag_agent import RAGAgent
-from src.services.retrieval import RetrievalService
+from src.services.retrieval_service import RetrievalService
 from src.config.settings import settings
 from src.utils.exceptions import (
     RetrievalError,

@@ -154,6 +154,7 @@ class RAGAgent:
             # Step 1.5: Check if we have any context to work with
             if not retrieved_context.chunks or len(retrieved_context.chunks) == 0:
                 # Handle the case where no relevant content was found
+                # First check if this is a simple greeting that we can respond to generically
                 fallback_response = await self._handle_empty_retrieval(query_request)
                 self.logger.info(f"Handled query with no relevant context, response ID: {fallback_response.id}")
                 return fallback_response, retrieved_context
@@ -346,20 +347,40 @@ class RAGAgent:
     async def _handle_empty_retrieval(self, query_request: RAGQueryRequest) -> GeneratedResponse:
         """
         Handle the case where no relevant context is retrieved for a query.
+        For simple greetings, respond with a friendly message instead of insufficient data message.
         """
         from src.utils.response_templates import ResponseTemplates
+        import re
+
+        # Check if the query is a simple greeting
+        query_lower = query_request.query.lower().strip()
+        greeting_patterns = [
+            r'^hello', r'^hi', r'^hey', r'^greetings', r'^good morning',
+            r'^good afternoon', r'^good evening', r'^good day', r'how are you',
+            r'howdy', r'what\'s up', r'how\'s it going'
+        ]
+
+        is_greeting = any(re.match(pattern, query_lower) for pattern in greeting_patterns)
+
+        if is_greeting:
+            # For greetings, provide a friendly response
+            greeting_response = "Hello! I'm your AI assistant for the Physical AI & Humanoid Robotics course. How can I help you today?"
+            content = greeting_response
+        else:
+            # For non-greetings, use the standard insufficient data response
+            content = ResponseTemplates.get_insufficient_data_response("no_relevant_content")
 
         return GeneratedResponse(
             id=str(uuid.uuid4()),
             query_id=str(uuid.uuid4()),
-            content=ResponseTemplates.get_insufficient_data_response("no_relevant_content"),
+            content=content,
             sources=[],
             generation_timestamp=datetime.utcnow(),
-            confidence_level="insufficient_data",
+            confidence_level="insufficient_data" if not is_greeting else "medium",  # Higher confidence for greetings
             metadata={
                 "model_name": settings.MODEL_NAME,
                 "retrieval_chunks_count": 0,
-                "reason": "no_relevant_content_found"
+                "reason": "no_relevant_content_found" if not is_greeting else "greeting_response"
             }
         )
 
