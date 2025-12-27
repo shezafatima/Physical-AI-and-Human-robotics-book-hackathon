@@ -1,7 +1,10 @@
-// API service for connecting to the backend
-const API_BASE_URL = typeof process !== 'undefined' && process.env.REACT_APP_API_URL
-  ? process.env.REACT_APP_API_URL
-  : 'https://shizafatima-hackathon.hf.space'; // Default to deployed backend URL
+const API_BASE_URL =
+  typeof process !== 'undefined' && process.env.REACT_APP_API_URL
+    ? process.env.REACT_APP_API_URL
+    : 'https://shizafatima-hackathon.hf.space'; // Default to deployed backend URL
+
+
+
 
 class ApiService {
   constructor() {
