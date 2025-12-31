@@ -290,6 +290,32 @@ export default apiService;
 
 // Example usage functions
 export const chatWithBot = async (message, selectedText = null, contextMode = 'full_content', sessionId = null) => {
+  // Validate query length before sending (backend requires at least 3 characters)
+  if (!message || message.trim().length < 3) {
+    // For very short messages like "hi", provide a friendly response instead of an error
+    const lowerMessage = message ? message.trim().toLowerCase() : '';
+    if (lowerMessage === 'hi' || lowerMessage === 'hey' || lowerMessage === 'hello') {
+      return {
+        response: "Hello! I'm your AI assistant for the Physical AI & Humanoid Robotics course. How can I help you today?",
+        sources: [],
+        confidence: 'high',
+        status: 'success',
+        context: {},
+        timestamp: new Date().toISOString()
+      };
+    } else {
+      return {
+        response: "Please enter a query with at least 3 characters so I can better assist you.",
+        sources: [],
+        confidence: 'insufficient_data',
+        status: 'error',
+        context: {},
+        error: 'Query too short',
+        timestamp: new Date().toISOString()
+      };
+    }
+  }
+
   try {
     const response = await apiService.sendMessage(message, selectedText, contextMode, sessionId);
 
