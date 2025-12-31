@@ -164,14 +164,20 @@ class ApiService {
   // Chatbot API methods - mapped to existing /v1/query endpoint
   async sendMessage(message, selectedText = null, contextMode = 'full_content', sessionId = null) {
     try {
-      // Send only the query field to match backend schema exactly
+      // Send request in format that matches backend schema exactly
       return await this.request('/v1/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: message  // Only send the query field to avoid validation errors
+          query: message,
+          user_id: sessionId || null,  // Include session ID as user_id if available
+          metadata: {                  // Include optional metadata
+            context_mode: contextMode,
+            selected_text: selectedText,
+            source: 'frontend'
+          }
         })
       });
     } catch (error) {
