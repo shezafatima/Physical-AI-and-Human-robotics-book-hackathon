@@ -1,7 +1,7 @@
 const API_BASE_URL =
   typeof process !== 'undefined' && process.env.REACT_APP_API_URL
     ? process.env.REACT_APP_API_URL
-    : 'https://shizafatima-hackathon.hf.space'; // Default to deployed backend URL
+    : 'https://shizafatima-hackathon.hf.space';
 
 
 
