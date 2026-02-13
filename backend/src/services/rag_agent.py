@@ -103,7 +103,7 @@ class RAGAgent:
             query_request_obj = QueryRequest(
                 query=retrieval_query,
                 top_k=query_request.top_k if hasattr(query_request, 'top_k') else 5,
-                score_threshold=query_request.threshold if hasattr(query_request, 'threshold') else 0.5
+                score_threshold=query_request.threshold if hasattr(query_request, 'threshold') else settings.RETRIEVAL_THRESHOLD
             )
             query_result = await self.retrieval_service.retrieve(query_request_obj)
 

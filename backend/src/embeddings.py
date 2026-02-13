@@ -1,29 +1,37 @@
 from typing import List, Optional
 from .config.settings import settings
-import os
-import cohere
+import asyncio
+import threading
 
-class Embedder:
+class EmbedderAdapter:
+    """
+    Adapter class that wraps the EmbeddingService to maintain backward compatibility
+    with the existing embedder interface while using the new robust embedding service.
+    """
+
     def __init__(self):
-        # Initialize Cohere client for embeddings
-        api_key = settings.COHERE_API_KEY or os.getenv("COHERE_API_KEY")
-        if not api_key:
-            raise ValueError("COHERE_API_KEY environment variable is required")
-
-        self.co = cohere.Client(api_key)
-        print("Using Cohere embeddings for semantic similarity.")
+        # Initialize the new EmbeddingService
+        from .services.embedding_service import EmbeddingService
+        try:
+            self.service = EmbeddingService()
+            print("Initialized EmbeddingService with Cohere/local fallback capability.")
+        except Exception as e:
+            print(f"Warning: Could not initialize embedding service: {e}")
+            raise
 
     def embed_text(self, text: str) -> List[float]:
         """
-        Generate embeddings for a single text using Cohere
+        Generate embeddings for a single text using the EmbeddingService
         """
         try:
-            response = self.co.embed(
-                texts=[text],
-                model="embed-english-v3.0",
-                input_type="search_document"
+            # Run the async method synchronously
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            embedding_obj = loop.run_until_complete(
+                self.service.generate_embedding(text, input_type="search_document")
             )
-            return response.embeddings[0]  # Return the first (and only) embedding
+            loop.close()
+            return embedding_obj.vector
         except Exception as e:
             print(f"Error generating embedding for text: {e}")
             # Return a zero vector as fallback
@@ -31,26 +39,21 @@ class Embedder:
 
     def embed_texts(self, texts: List[str]) -> List[List[float]]:
         """
-        Generate embeddings for multiple texts using Cohere
+        Generate embeddings for multiple texts using the EmbeddingService
         """
         if not texts:
             return []
 
         try:
-            # Cohere has limits on batch size, so process in chunks if needed
-            all_embeddings = []
-            batch_size = 96  # Cohere's max batch size
+            # Run the async method synchronously
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            embedding_objects = loop.run_until_complete(
+                self.service.generate_embeddings(texts, input_type="search_document")
+            )
+            loop.close()
 
-            for i in range(0, len(texts), batch_size):
-                batch = texts[i:i + batch_size]
-                response = self.co.embed(
-                    texts=batch,
-                    model="embed-english-v3.0",
-                    input_type="search_document"
-                )
-                all_embeddings.extend(response.embeddings)
-
-            return all_embeddings
+            return [emb.vector for emb in embedding_objects]
         except Exception as e:
             print(f"Error generating embeddings for texts: {e}")
             # Return zero vectors as fallback
@@ -58,4 +61,4 @@ class Embedder:
 
 
 # Singleton instance
-embedder = Embedder()
+embedder = EmbedderAdapter()

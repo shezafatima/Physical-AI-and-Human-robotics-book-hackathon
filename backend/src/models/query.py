@@ -88,8 +88,8 @@ class RAGQueryRequest(BaseModel):
         le=100
     )
     threshold: float = Field(
-        0.5,
-        description="Minimum relevance threshold (default: 0.5, min: 0.0, max: 1.0)",
+        0.3,
+        description="Minimum relevance threshold (default: 0.3, min: 0.0, max: 1.0)",
         ge=0.0,
         le=1.0
     )

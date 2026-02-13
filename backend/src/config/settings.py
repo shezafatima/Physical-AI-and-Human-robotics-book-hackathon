@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     MODEL_NAME: str = "gemini-3-flash-preview"  # Use Gemini model when using Gemini API
     TEMPERATURE: float = 0.7
     MAX_TOKENS: int = 2048
-    RETRIEVAL_THRESHOLD: float = 0.5
+    RETRIEVAL_THRESHOLD: float = 0.3
     TIMEOUT_SECONDS: int = 30
     ENABLE_CITATIONS: bool = True
 
@@ -32,7 +32,11 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        env_file_encoding = 'utf-8'
         case_sensitive = True
+        # Allow .env file to be optional (for Hugging Face deployment)
+        # Environment variables will always take precedence over .env
+        extra = 'ignore'
 
     def get_agent_config_dict(self) -> dict:
         """

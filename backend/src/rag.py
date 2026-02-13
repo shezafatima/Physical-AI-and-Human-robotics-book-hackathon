@@ -7,7 +7,6 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 from urllib.parse import urljoin, urlparse
 import re
-from .embeddings import embedder
 from .config.settings import settings
 
 
@@ -26,10 +25,21 @@ class QdrantRAG:
             )
             self._create_collection_if_not_exists()
             print(f"Connected to Qdrant at {qdrant_url}")
+
+            # Initialize the embedding service with fallback capability
+            from .services.embedding_service import EmbeddingService
+            self.embedding_service = EmbeddingService()
         except Exception as e:
             print(f"Could not connect to Qdrant at {qdrant_url}: {str(e)}")
             print("RAG functionality will be limited until Qdrant is available")
             self.client = None
+            # Still try to initialize embedding service for offline functionality
+            try:
+                from .services.embedding_service import EmbeddingService
+                self.embedding_service = EmbeddingService()
+            except Exception as embed_e:
+                print(f"Could not initialize embedding service: {embed_e}")
+                self.embedding_service = None
 
     def _split_text(self, text: str, chunk_size: int = 1000, overlap: int = 200) -> List[str]:
         """
@@ -96,7 +106,7 @@ class QdrantRAG:
                 )
             )
 
-    def add_documents(self, documents: List[Dict[str, Any]]):
+    async def add_documents(self, documents: List[Dict[str, Any]]):
         """Add documents to the Qdrant collection"""
         if not documents:
             return
@@ -105,14 +115,23 @@ class QdrantRAG:
             print("Qdrant client not available. Cannot add documents.")
             return
 
+        if self.embedding_service is None:
+            print("Embedding service not available. Cannot add documents.")
+            return
+
         # Prepare points for insertion
         points = []
         for idx, doc in enumerate(documents):
             content = doc.get("content", "")
             metadata = doc.get("metadata", {})
 
-            # Generate embedding for the content
-            embedding = embedder.embed_text(content)
+            # Generate embedding for the content using the embedding service
+            try:
+                embedding_obj = await self.embedding_service.generate_embedding(content, input_type="search_document")
+                embedding = embedding_obj.vector
+            except Exception as e:
+                print(f"Error generating embedding for document {idx}: {e}")
+                continue
 
             points.append(
                 models.PointStruct(
@@ -131,13 +150,23 @@ class QdrantRAG:
             points=points
         )
 
-    def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
+    async def search(self, query: str, top_k: int = 5) -> List[Dict[str, Any]]:
         """Search for relevant documents based on the query"""
         if self.client is None:
             print("Qdrant client not available. Cannot perform search.")
             return []
 
-        query_embedding = embedder.embed_text(query)
+        if self.embedding_service is None:
+            print("Embedding service not available. Cannot perform search.")
+            return []
+
+        # Generate embedding for the query using the embedding service
+        try:
+            query_embedding_obj = await self.embedding_service.generate_embedding(query, input_type="search_query")
+            query_embedding = query_embedding_obj.vector
+        except Exception as e:
+            print(f"Error generating embedding for query: {e}")
+            return []
 
         search_results = self.client.search(
             collection_name=self.collection_name,
@@ -155,7 +184,7 @@ class QdrantRAG:
 
         return results
 
-    def load_course_content(self, course_path: str):
+    async def load_course_content(self, course_path: str):
         """Load course content from markdown files and add to vector store"""
         documents = []
 
@@ -184,10 +213,10 @@ class QdrantRAG:
                             })
 
         # Add all documents to the vector store
-        self.add_documents(documents)
+        await self.add_documents(documents)
         return len(documents)
 
-    def load_content_from_sitemap(self, sitemap_url: str) -> int:
+    async def load_content_from_sitemap(self, sitemap_url: str) -> int:
         """
         Load content from a sitemap URL by extracting all URLs and scraping their content
         """
@@ -259,7 +288,7 @@ class QdrantRAG:
                     continue
 
             # Add all documents to the vector store
-            self.add_documents(documents)
+            await self.add_documents(documents)
             return len(documents)
 
         except Exception as e:
