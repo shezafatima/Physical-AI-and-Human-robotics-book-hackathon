@@ -31,10 +31,10 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     LOG_LEVEL: str = "info"
 
-    @field_validator('OPENAI_API_KEY', 'GEMINI_API_KEY', 'COHERE_API_KEY', 'QDRANT_API_KEY', 'QDRANT_URL', 'BASE_URL', mode='before')
+    @field_validator('OPENAI_API_KEY', 'GEMINI_API_KEY', 'COHERE_API_KEY', 'QDRANT_API_KEY', 'QDRANT_URL', 'BASE_URL', 'MODEL_NAME', mode='before')
     @classmethod
     def strip_whitespace(cls, v):
-        """Strip whitespace from API keys and URLs to prevent header errors"""
+        """Strip whitespace from API keys, URLs, and model names to prevent header/API errors"""
         if v is not None and isinstance(v, str):
             return v.strip()
         return v
