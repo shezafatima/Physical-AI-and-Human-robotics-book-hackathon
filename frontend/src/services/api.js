@@ -1,7 +1,7 @@
 const API_BASE_URL =
   typeof process !== 'undefined' && process.env.REACT_APP_API_URL
     ? process.env.REACT_APP_API_URL
-    : 'https://physical-ai-and-human-robotics-book-hackathon-production.up.railway.app/'
+    : 'https://physical-ai-and-human-robotics-book-hackathon-production.up.railway.app'
     // 'https://shizafatima-hackathon.hf.space';
 
 
