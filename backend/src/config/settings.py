@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import Optional
 from src.utils.exceptions import ConfigurationError
 
@@ -29,6 +30,14 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = "sqlite:///./coursebook.db"
     APP_ENV: str = "development"
     LOG_LEVEL: str = "info"
+
+    @field_validator('OPENAI_API_KEY', 'GEMINI_API_KEY', 'COHERE_API_KEY', 'QDRANT_API_KEY', 'QDRANT_URL', 'BASE_URL', mode='before')
+    @classmethod
+    def strip_whitespace(cls, v):
+        """Strip whitespace from API keys and URLs to prevent header errors"""
+        if v is not None and isinstance(v, str):
+            return v.strip()
+        return v
 
     class Config:
         env_file = ".env"
